@@ -3,15 +3,17 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   
-  /* Thiết lập hình ảnh nền */
+  /* Đặt một lớp phủ màu tối lên trên ảnh nền để dễ đọc chữ */
+  background-color: rgba(0, 0, 0, 0.5);
+  
+  /* Thiết lập hình ảnh nền, giờ nó sẽ hiển thị trên lớp phủ màu */
   background-image: url('assets/image/image-background.jpg');
   background-size: cover; /* Đảm bảo hình ảnh phủ kín toàn bộ màn hình */
   background-position: center; /* Căn hình ảnh vào giữa */
   background-attachment: fixed; /* Giữ hình ảnh cố định khi cuộn trang */
   
-  /* Đặt một lớp phủ màu tối lên trên ảnh nền để dễ đọc chữ */
-  background-color: rgba(0, 0, 0, 0.5);
-  background-blend-mode: multiply; /* Kết hợp màu nền và hình ảnh */
+  /* Kết hợp màu nền và hình ảnh */
+  background-blend-mode: multiply;
 }
 
 #root {
