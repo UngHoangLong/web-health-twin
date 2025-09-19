@@ -384,7 +384,11 @@ function Dashboard() {
           </div>
 
           {/* Cột giữa: Thông tin thời tiết */}
-          <div className="dashboard-weather">
+          <div className="dashboard-weather" style={{
+            maxHeight: '85vh',
+            overflowY: 'auto',
+            paddingRight: 8
+          }}>
             {loading ? (
               <div className="weather-placeholder">Đang tải dữ liệu...</div>
             ) : error ? (
@@ -435,7 +439,9 @@ function Dashboard() {
             )}
             {showDetail && (
               <div style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: '#0005', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 999}}>
-                {renderDayDetail()}
+                <div style={{background: '#fff', borderRadius: 16, padding: 24, minWidth: 340, maxWidth: 600, maxHeight: '80vh', boxShadow: '0 2px 16px #0002', color: '#4A7C59', textAlign: 'center', overflowY: 'auto'}}>
+                  {renderDayDetail()}
+                </div>
               </div>
             )}
           </div>
