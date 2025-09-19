@@ -123,7 +123,8 @@ function Setup() {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`,
+                        'ngrok-skip-browser-warning': 'true',
                     },
                     body: JSON.stringify({
                         city_id: parseInt(selectedCity, 10)
@@ -138,7 +139,8 @@ function Setup() {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
+                            'Authorization': `Bearer ${token}`,
+                            'ngrok-skip-browser-warning': 'true',
                         },
                         body: JSON.stringify({
                             disease_id: parseInt(selectedDisease, 10),

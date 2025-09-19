@@ -48,28 +48,56 @@ function Dashboard() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-        const resVisual = await fetch(`${BASE_URL}/get_data_to_visualize/${cityId}`);
-        const dataVisual = await resVisual.json();
-        if (dataVisual.status === 'success') {
+        console.log('Dashboard fetchData BASE_URL:', import.meta.env.VITE_API_BASE_URL, 'cityId:', cityId);
+        const resVisual = await fetch(`${import.meta.env.VITE_API_BASE_URL}/get_data_to_visualize/${cityId}`, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+          },
+        });
+        console.log('resVisual:', resVisual);
+        let dataVisual = null;
+        const contentType = resVisual.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          try {
+            dataVisual = await resVisual.json();
+            console.log('dataVisual:', dataVisual);
+          } catch (jsonErr) {
+            console.error('Lỗi parse JSON resVisual:', jsonErr);
+          }
+        } else {
+          const text = await resVisual.text();
+          console.error('Response text resVisual (not JSON):', text);
+        }
+        if (dataVisual && dataVisual.status === 'success') {
           setVisualData(dataVisual.data);
         } else {
           setError('Không lấy được dữ liệu visualize');
         }
         // Gọi luôn API lấy suggestion
         const accessToken = sessionStorage.getItem('access_token');
-        const resSuggest = await fetch(`${BASE_URL}/get_passive_suggestion/${cityId}`, {
+        const resSuggest = await fetch(`${import.meta.env.VITE_API_BASE_URL}/get_passive_suggestion/${cityId}`, {
           headers: {
             'Authorization': accessToken ? `Bearer ${accessToken}` : '',
+            'ngrok-skip-browser-warning': 'true',
           },
         });
-        const dataSuggest = await resSuggest.json();
-        if (dataSuggest.status === 'success') {
+        console.log('resSuggest:', resSuggest);
+        let dataSuggest = null;
+        try {
+          dataSuggest = await resSuggest.json();
+          console.log('dataSuggest:', dataSuggest);
+        } catch (jsonErr) {
+          console.error('Lỗi parse JSON resSuggest:', jsonErr);
+          const text = await resSuggest.text();
+          console.error('Response text resSuggest:', text);
+        }
+        if (dataSuggest && dataSuggest.status === 'success') {
           setSuggestion(dataSuggest.suggestion);
         } else {
           setSuggestion("");
         }
       } catch (err) {
+        console.error('API error:', err);
         setError('Lỗi khi gọi API');
       } finally {
         setLoading(false);
@@ -210,40 +238,56 @@ function Dashboard() {
       setChatLoading(false);
       return;
     }
-    // Hiển thị tin nhắn user ngay
     setChatHistory(prev => [...prev, { role: 'user', message: chatInput }]);
     setChatInput('');
     try {
-      // Gửi request đến submit_chatbot_query
+      console.log('Gửi chatbot:', { cityId, chatInput });
       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/submit_chatbot_query`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`
+          'Authorization': `Bearer ${accessToken}`,
+          'ngrok-skip-browser-warning': 'true',
         },
         body: JSON.stringify({
           city_id: cityId,
           user_input: chatInput
         })
       });
-      const data = await res.json();
-      if (res.ok && data.request_id) {
-        // Polling lấy kết quả
+      console.log('Response submit_chatbot_query:', res);
+      let data = null;
+      try {
+        data = await res.json();
+        console.log('Data submit_chatbot_query:', data);
+      } catch (jsonErr) {
+        console.error('Lỗi parse JSON submit_chatbot_query:', jsonErr);
+        const text = await res.text();
+        console.error('Response text submit_chatbot_query:', text);
+      }
+      if (res.ok && data && data.request_id) {
         let result = null;
         let tries = 0;
-        while (!result && tries < 30) { // timeout sau 30 lần (khoảng 30s)
+        while (!result && tries < 30) {
           await new Promise(r => setTimeout(r, 1000));
           const res2 = await fetch(`${import.meta.env.VITE_API_BASE_URL}/get_chatbot_result/${data.request_id}`, {
             headers: {
-              'Authorization': `Bearer ${accessToken}`
+              'Authorization': `Bearer ${accessToken}`,
+              'ngrok-skip-browser-warning': 'true',
             }
           });
-          if (res2.status === 200) {
-            const data2 = await res2.json();
-            if (data2.status === 'completed' && data2.data) {
-              result = data2.data;
-              break;
-            }
+          console.log(`Polling lần ${tries + 1}:`, res2);
+          let data2 = null;
+          try {
+            data2 = await res2.json();
+            console.log(`Data polling lần ${tries + 1}:`, data2);
+          } catch (jsonErr2) {
+            console.error(`Lỗi parse JSON polling lần ${tries + 1}:`, jsonErr2);
+            const text2 = await res2.text();
+            console.error(`Response text polling lần ${tries + 1}:`, text2);
+          }
+          if (res2.status === 200 && data2 && data2.status === 'completed' && data2.data) {
+            result = data2.data;
+            break;
           }
           tries++;
         }
@@ -256,6 +300,7 @@ function Dashboard() {
         setChatHistory(prev => [...prev, { role: 'bot', message: 'Không gửi được yêu cầu đến chatbot.' }]);
       }
     } catch (e) {
+      console.error('Lỗi khi gửi hoặc nhận phản hồi từ chatbot:', e);
       setChatHistory(prev => [...prev, { role: 'bot', message: 'Có lỗi khi gửi hoặc nhận phản hồi từ chatbot.' }]);
     } finally {
       setChatLoading(false);
