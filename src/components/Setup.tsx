@@ -221,7 +221,7 @@ function Setup() {
                                     className={`disease-item ${selectedDisease === disease.id.toString() ? 'selected' : ''}`}
                                     onClick={() => setSelectedDisease(disease.id.toString())}
                                 >
-                                    <img src={disease.image} alt={disease.name} className="disease-image" />
+                                    <img src={disease.image} alt={typeof disease.name === 'string' ? disease.name : undefined} className="disease-image" />
                                     <span className="disease-name">{disease.name}</span>
                                     {/* Thêm mô tả cụ thể về bệnh */}
                                     <span className="disease-description">{disease.description}</span>
@@ -244,7 +244,7 @@ function Setup() {
                             value={diseaseDescription}
                             onChange={(e) => setDiseaseDescription(e.target.value)}
                             className="input-field dark-input"
-                            rows="4"
+                            rows={4}
                         />
                     </div>
                     <p className="note-text">
