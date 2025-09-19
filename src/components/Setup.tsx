@@ -187,7 +187,7 @@ function Setup() {
     return (
         <div className="setup-page-container">
             <div className="setup-card">
-                <h1 className="logo-text">Thiết lập hồ cá nhân </h1>
+                <h1 className="logo-text">Thiết lập hồ sơ cá nhân </h1>
                 <p className="slogan-text">Hãy cung cấp một vài thông tin về nơi bạn đang sống cũng như sức khỏe để chúng tôi hỗ trợ bạn tốt hơn.</p>
                 <form className="form" onSubmit={handleSubmit}>
                     <div className="input-group">
