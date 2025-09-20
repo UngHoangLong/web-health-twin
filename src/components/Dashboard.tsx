@@ -387,7 +387,6 @@ function Dashboard() {
               }}
               onClick={() => {
                 sessionStorage.clear();
-                localStorage.clear();
                 navigate('/login');
               }}
             >
