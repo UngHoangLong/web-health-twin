@@ -34,6 +34,7 @@ function Dashboard() {
     { role: 'bot', message: 'Chào bạn, sức khỏe của bạn là ưu tiên hàng đầu. Bạn có đang băn khoăn về tác động của thời tiết, khí hậu, tia UV đến sức khỏe của mình không? Hãy để tôi đồng hành cùng bạn lên kế hoạch để bảo vệ sức khỏe tốt hơn.'}
   ]);
   const [chatLoading, setChatLoading] = useState(false);
+  const [currentCityName, setCurrentCityName] = useState<string>("");
   const chatBodyRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -104,6 +105,10 @@ function Dashboard() {
       }
     };
     fetchData();
+
+    // Lấy tên tỉnh hiện tại từ localStorage
+    const cityName = localStorage.getItem(`city_name_${username}`);
+    if (cityName) setCurrentCityName(cityName);
   }, []);
 
   // Khi click chỉ hiện popup, không fetch lại
@@ -330,6 +335,14 @@ function Dashboard() {
     <div className="dashboard-layout">
       <div className="dashboard-main">
         <div className="dashboard-toolbar" style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 18, padding: '12px 0'}}>
+          <div>
+            <span style={{ color: "#000000f3", fontWeight: 600, fontSize: "12px" }}>
+              <strong> Tỉnh hiện tại:</strong>
+            </span>
+            <span style={{ color: "#c25489ff", fontWeight: 600, fontSize: "18px" }}>
+              {currentCityName}
+            </span>
+          </div>
           <button className="toolbar-btn" style={{display: 'flex', alignItems: 'center', gap: 8, fontWeight: 500, fontSize: '1rem'}} onClick={() => navigate('/setup')}>
             <FaUserEdit size={20} color="#4A7C59" />
             Cập nhật thông tin
