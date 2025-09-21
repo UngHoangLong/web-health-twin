@@ -172,22 +172,22 @@ function Dashboard() {
               labels,
               datasets: [
                 {
-                  label: 'PM10',
+                  label: 'PM10 (μg/m3)',
                   data: pm10Data,
                   backgroundColor: '#7B9EFA',
                 },
                 {
-                  label: 'PM2.5',
+                  label: 'PM2.5 (μg/m3)',
                   data: pm25Data,
                   backgroundColor: '#F77E7E',
                 },
                 {
-                  label: 'NH3',
+                  label: 'NH3 (μg/m3)',
                   data: nh3Data,
                   backgroundColor: '#F7D77E',
                 },
                 {
-                  label: 'UVI',
+                  label: 'UVI (μg/m3)',
                   data: uviData,
                   backgroundColor: '#7EF7B2',
                 },
